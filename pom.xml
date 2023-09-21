@@ -218,6 +218,9 @@
           </generateGitPropertiesFilename>
           <failOnNoGitDirectory>false</failOnNoGitDirectory>
           <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+          <excludeProperties>
+            <excludeProperty>^git.local.branch.*$</excludeProperty>
+          </excludeProperties>
         </configuration>
       </plugin>
 
