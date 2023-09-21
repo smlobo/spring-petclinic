@@ -1,3 +1,12 @@
+# Sheldon notes
+
+* Branch using the last commit that works with Java 8 (commit id: 9ecdc11)
+* Modified to include 3 Command Injection errors
+  * `commandInjectionRequestParam()`
+  * `commandInjectionPathVariable()`
+  * Modified existing `loadPetWithVisit()` to add this error
+* Run with: `mvn -DskipTests=true -Dparfait.installation=<install-area> --settings ../maven/settings.xml parfait:aggregate-translate parfait:aggregate-analyze`
+
 # Spring PetClinic Sample Application [![Build Status](https://github.com/spring-projects/spring-petclinic/actions/workflows/maven-build.yml/badge.svg)](https://github.com/spring-projects/spring-petclinic/actions/workflows/maven-build.yml)
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/spring-projects/spring-petclinic)

@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -22,11 +23,7 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Juergen Hoeller
@@ -49,6 +46,28 @@ class VisitController {
 		dataBinder.setDisallowedFields("id");
 	}
 
+	// Sheldon: Parfait command injection
+	public void commandInjectionRequestParam(@RequestParam("book_list_id") String rID) {
+		String cmd = "/bin/sh -c \'convert /upload/" + rID + ".gif /var/www/images/target.jpg\'";
+		try {
+			Runtime.getRuntime().exec(cmd);
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	// Sheldon: Parfait command injection
+	public void commandInjectionPathVariable(@PathVariable("book_list_id") String rID) {
+		String cmd = "/bin/sh -c \'convert /upload/" + rID + ".gif /var/www/images/target.jpg\'";
+		try {
+			Runtime.getRuntime().exec(cmd);
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	/**
 	 * Called before each and every @RequestMapping annotated method. 2 goals: - Make sure
 	 * we always have fresh data - Since we do not use the session scope, make sure that
@@ -57,9 +76,19 @@ class VisitController {
 	 * @return Pet
 	 */
 	@ModelAttribute("visit")
-	public Visit loadPetWithVisit(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId,
+	public Visit loadPetWithVisit(@PathVariable("ownerId") String ownerId, @PathVariable("petId") int petId,
 			Map<String, Object> model) {
-		Owner owner = this.owners.findById(ownerId);
+		// Sheldon: When PathVariable is mapped to an 'int' this is not caught. Potential
+		// Parfait bug?
+		String cmd = "/bin/sh -c \'convert /upload/" + ownerId + ".gif /var/www/images/target.jpg\'";
+		try {
+			Runtime.getRuntime().exec(cmd);
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		Owner owner = this.owners.findById(Integer.parseInt(ownerId));
 
 		Pet pet = owner.getPet(petId);
 		model.put("pet", pet);
